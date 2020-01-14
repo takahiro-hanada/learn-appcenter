@@ -1,0 +1,57 @@
+﻿<Page
+    x:Class="LearnAppCenter.Uwp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:LearnAppCenter.Uwp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <StackPanel>
+        <TextBlock FontSize="{ThemeResource TextStyleExtraLargeFontSize}">
+            <Run Text="App Center Secret:" />
+            <Run x:Name="AppSecretSecretText" />
+        </TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <Button
+                Name="ShowAppCenterSecretFlyoutButton"
+                Content="Update secret"
+                Style="{ThemeResource TextBlockButtonStyle}">
+                <Button.Flyout>
+                    <Flyout x:Name="UpdateAppCenterSecretFlyout">
+                        <StackPanel>
+                            <TextBox Name="AppCenterSecretTextBox" Header="Secret" />
+                            <Button
+                                Name="UpdateAppCenterSecretButton"
+                                Click="UpdateAppCenterSecretButton_Click"
+                                Content="Update" />
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <Button
+                Name="AppCenterStartButton"
+                Click="AppCenterStartButton_Click"
+                Content="Start AppCenter"
+                IsEnabled="False"
+                Style="{ThemeResource TextBlockButtonStyle}" />
+        </StackPanel>
+        <TextBlock
+            Name="HasCrashedInLastSessionIndicator"
+            Margin="12"
+            Foreground="Red"
+            Text="Has crashed in last session."
+            Visibility="Collapsed" />
+        <Button
+            Name="ThrowNewTestCrashExceptionButton"
+            Margin="12"
+            Click="ThrowNewTestCrashExceptionButton_Click"
+            Content="Throw new TestCrashException" />
+        <Button
+            Name="GanerateTestCrushButton"
+            Margin="12"
+            Click="GanerateTestCrushButton_Click"
+            Content="Call Crushes.GanerateTestCrush method. (debug build only)" />
+    </StackPanel>
+</Page>
