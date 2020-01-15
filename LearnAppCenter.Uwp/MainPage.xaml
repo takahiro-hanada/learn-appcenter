@@ -6,109 +6,111 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <StackPanel>
-        <StackPanel Margin="12" Orientation="Horizontal">
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel Margin="12" Orientation="Horizontal">
+                <TextBox
+                    Name="AppCenterSecretTextBox"
+                    MinWidth="200"
+                    Header="Secret"
+                    Text="{x:Bind AppCenterSecret, Mode=TwoWay}" />
+                <Button
+                    Name="StartButton"
+                    Margin="12,0"
+                    VerticalAlignment="Bottom"
+                    Click="StartButton_Click"
+                    Content="Start" />
+            </StackPanel>
             <TextBox
-                Name="AppCenterSecretTextBox"
                 MinWidth="200"
-                Header="Secret"
-                Text="{x:Bind AppCenterSecret, Mode=TwoWay}" />
+                Margin="12"
+                HorizontalAlignment="Left"
+                Header="User Id"
+                Text="{x:Bind UserId, Mode=TwoWay}" />
+            <ToggleSwitch
+                Name="AnalyticsSwitch"
+                Margin="12"
+                Header="Analytics"
+                Toggled="AnalyticsSwitch_Toggled" />
             <Button
-                Name="StartButton"
-                Margin="12,0"
+                Margin="32,4"
                 VerticalAlignment="Bottom"
-                Click="StartButton_Click"
-                Content="Start" />
-        </StackPanel>
-        <TextBox
-            MinWidth="200"
-            Margin="12"
-            HorizontalAlignment="Left"
-            Header="User Id"
-            Text="{x:Bind UserId, Mode=TwoWay}" />
-        <ToggleSwitch
-            Name="AnalyticsSwitch"
-            Margin="12"
-            Header="Analytics"
-            Toggled="AnalyticsSwitch_Toggled" />
-        <Button
-            Margin="32,4"
-            VerticalAlignment="Bottom"
-            Click="{x:Bind TrackEvent}"
-            Content="Analytics.TrackEvent(..." />
-        <TextBox
-            MinWidth="200"
-            Margin="64,4"
-            HorizontalAlignment="Left"
-            Header="Event Name"
-            Text="{x:Bind EventName, Mode=TwoWay}" />
-        <StackPanel Margin="64,4" Orientation="Horizontal">
+                Click="{x:Bind TrackEvent}"
+                Content="Analytics.TrackEvent(..." />
             <TextBox
-                MinWidth="120"
-                Margin="4,0"
-                Header="Property Name"
-                IsEnabled="{x:Bind UseEventPropertySwitch.IsOn, Mode=OneWay}"
-                Text="{x:Bind EventPropertyName, Mode=TwoWay}" />
-            <TextBox
-                MinWidth="120"
-                Margin="4,0"
-                Header="Property Value"
-                IsEnabled="{x:Bind UseEventPropertySwitch.IsOn, Mode=OneWay}"
-                Text="{x:Bind EventPropertyValue, Mode=TwoWay}" />
+                MinWidth="200"
+                Margin="64,4"
+                HorizontalAlignment="Left"
+                Header="Event Name"
+                Text="{x:Bind EventName, Mode=TwoWay}" />
+            <StackPanel Margin="64,4" Orientation="Horizontal">
+                <TextBox
+                    MinWidth="120"
+                    Margin="4,0"
+                    Header="Property Name"
+                    IsEnabled="{x:Bind UseEventPropertySwitch.IsOn, Mode=OneWay}"
+                    Text="{x:Bind EventPropertyName, Mode=TwoWay}" />
+                <TextBox
+                    MinWidth="120"
+                    Margin="4,0"
+                    Header="Property Value"
+                    IsEnabled="{x:Bind UseEventPropertySwitch.IsOn, Mode=OneWay}"
+                    Text="{x:Bind EventPropertyValue, Mode=TwoWay}" />
+                <ToggleSwitch
+                    Name="UseEventPropertySwitch"
+                    Margin="4,0"
+                    VerticalAlignment="Bottom"
+                    IsOn="{x:Bind UseEventProperty, Mode=TwoWay}"
+                    OffContent=""
+                    OnContent="" />
+            </StackPanel>
             <ToggleSwitch
-                Name="UseEventPropertySwitch"
-                Margin="4,0"
+                Name="CrashesSwitch"
+                Margin="12"
+                Header="Crashes"
+                Toggled="CrashesSwitch_Toggled" />
+            <TextBlock
+                Name="HasCrashedInLastSessionIndicator"
+                Margin="32,4"
+                Foreground="Red"
+                Text="Has crashed in last session."
+                Visibility="Collapsed" />
+            <Button
+                Margin="32,4"
+                Click="{x:Bind ThrowNewTestCrashException}"
+                Content="throw new TestCrashException();" />
+            <Button
+                Margin="32,4"
+                Click="{x:Bind GanerateTestCrush}"
+                Content="Crushes.GanerateTestCrush(); ... Debug build only" />
+            <Button
+                Margin="32,4"
                 VerticalAlignment="Bottom"
-                IsOn="{x:Bind UseEventProperty, Mode=TwoWay}"
-                OffContent=""
-                OnContent="" />
+                Click="{x:Bind TrackError}"
+                Content="Crushes.TrackError(new TestCrashException(), ..." />
+            <StackPanel Margin="64,4" Orientation="Horizontal">
+                <TextBox
+                    MinWidth="120"
+                    Margin="4,0"
+                    VerticalAlignment="Bottom"
+                    Header="Property Name"
+                    IsEnabled="{x:Bind UseErrorPropertySwitch.IsOn, Mode=OneWay}"
+                    Text="{x:Bind ErrorPropertyName, Mode=TwoWay}" />
+                <TextBox
+                    MinWidth="120"
+                    Margin="4,0"
+                    VerticalAlignment="Bottom"
+                    Header="Property Value"
+                    IsEnabled="{x:Bind UseErrorPropertySwitch.IsOn, Mode=OneWay}"
+                    Text="{x:Bind ErrorPropertyValue, Mode=TwoWay}" />
+                <ToggleSwitch
+                    Name="UseErrorPropertySwitch"
+                    Margin="4,0"
+                    VerticalAlignment="Bottom"
+                    IsOn="{x:Bind UseErrorProperty, Mode=TwoWay}"
+                    OffContent=""
+                    OnContent="" />
+            </StackPanel>
         </StackPanel>
-        <ToggleSwitch
-            Name="CrashesSwitch"
-            Margin="12"
-            Header="Crashes"
-            Toggled="CrashesSwitch_Toggled" />
-        <TextBlock
-            Name="HasCrashedInLastSessionIndicator"
-            Margin="32,4"
-            Foreground="Red"
-            Text="Has crashed in last session."
-            Visibility="Collapsed" />
-        <Button
-            Margin="32,4"
-            Click="{x:Bind ThrowNewTestCrashException}"
-            Content="throw new TestCrashException();" />
-        <Button
-            Margin="32,4"
-            Click="{x:Bind GanerateTestCrush}"
-            Content="Crushes.GanerateTestCrush(); ... Debug build only" />
-        <Button
-            Margin="32,4"
-            VerticalAlignment="Bottom"
-            Click="{x:Bind TrackError}"
-            Content="Crushes.TrackError(new TestCrashException(), ..." />
-        <StackPanel Margin="64,4" Orientation="Horizontal">
-            <TextBox
-                MinWidth="120"
-                Margin="4,0"
-                VerticalAlignment="Bottom"
-                Header="Property Name"
-                IsEnabled="{x:Bind UseErrorPropertySwitch.IsOn, Mode=OneWay}"
-                Text="{x:Bind ErrorPropertyName, Mode=TwoWay}" />
-            <TextBox
-                MinWidth="120"
-                Margin="4,0"
-                VerticalAlignment="Bottom"
-                Header="Property Value"
-                IsEnabled="{x:Bind UseErrorPropertySwitch.IsOn, Mode=OneWay}"
-                Text="{x:Bind ErrorPropertyValue, Mode=TwoWay}" />
-            <ToggleSwitch
-                Name="UseErrorPropertySwitch"
-                Margin="4,0"
-                VerticalAlignment="Bottom"
-                IsOn="{x:Bind UseErrorProperty, Mode=TwoWay}"
-                OffContent=""
-                OnContent="" />
-        </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </Page>
