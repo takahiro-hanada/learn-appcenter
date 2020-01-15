@@ -21,16 +21,66 @@ namespace LearnAppCenter.Uwp
 {
     public sealed partial class MainPage : Page
     {
-        static string AppCenterSecret
+        public MainPage() => InitializeComponent();
+
+        string AppCenterSecret
         {
             get => ApplicationData.Current.LocalSettings.Values["AppCenterSecret"] as string;
-            set => ApplicationData.Current.LocalSettings.Values["AppCenterSecret"] = value;
+            set
+            {
+                value = string.IsNullOrWhiteSpace(value) ? null : value;
+
+                ApplicationData.Current.LocalSettings.Values["AppCenterSecret"] = value;
+            }
         }
 
-        static string UserId
+        string UserId
         {
             get => ApplicationData.Current.LocalSettings.Values["UserId"] as string;
-            set => ApplicationData.Current.LocalSettings.Values["UserId"] = value;
+            set
+            {
+                value = string.IsNullOrWhiteSpace(value) ? null : value;
+
+                ApplicationData.Current.LocalSettings.Values["UserId"] = value;
+
+                AppCenter.SetUserId(value);
+            }
+        }
+
+        string EventName
+        {
+            get => ApplicationData.Current.LocalSettings.Values["EventName"] as string;
+            set => ApplicationData.Current.LocalSettings.Values["EventName"] = value;
+        }
+
+        bool UseEventProperty
+        {
+            get => ApplicationData.Current.LocalSettings.Values["UseEventProperty"] as bool? ?? false;
+            set => ApplicationData.Current.LocalSettings.Values["UseEventProperty"] = value;
+        }
+
+        string EventPropertyName
+        {
+            get => ApplicationData.Current.LocalSettings.Values["EventPropertyName"] as string;
+            set => ApplicationData.Current.LocalSettings.Values["EventPropertyName"] = value;
+        }
+
+        string EventPropertyValue
+        {
+            get => ApplicationData.Current.LocalSettings.Values["EventPropertyValue"] as string;
+            set => ApplicationData.Current.LocalSettings.Values["EventPropertyValue"] = value;
+        }
+
+        bool UseErrorProperty
+        {
+            get => ApplicationData.Current.LocalSettings.Values["UseErrorProperty"] as bool? ?? false;
+            set => ApplicationData.Current.LocalSettings.Values["UseErrorProperty"] = value;
+        }
+
+        string ErrorPropertyName
+        {
+            get => ApplicationData.Current.LocalSettings.Values["ErrorPropertyName"] as string;
+            set => ApplicationData.Current.LocalSettings.Values["ErrorPropertyName"] = value;
         }
 
         string ErrorPropertyValue
@@ -39,89 +89,80 @@ namespace LearnAppCenter.Uwp
             set => ApplicationData.Current.LocalSettings.Values["ErrorPropertyValue"] = value;
         }
 
-        public MainPage()
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            InitializeComponent();
+            AppCenter.SetUserId(UserId);
+
+            AnalyticsSwitch.IsOn = await Analytics.IsEnabledAsync();
+
+            CrashesSwitch.IsOn = await Crashes.IsEnabledAsync();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        async void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            RefleshControls();
-        }
+            AppCenterSecretTextBox.IsReadOnly = true;
 
-        void UpdateConfigurationButton_Click(object sender, RoutedEventArgs e)
-        {
-            AppCenterSecret = AppCenterSecretTextBox.Text;
+            StartButton.IsEnabled = false;
+
+            AppCenter.Start(AppCenterSecret, typeof(Analytics), typeof(Crashes));
             
-            UserId = UserIdTextBox.Text;
-
-            ConfigurationFlyout.Hide();
-
-            RefleshControls();
-        }
-
-        void RefleshControls()
-        {
-            var appCenterSecret = AppCenterSecret ?? string.Empty;
-            var userId = UserId ?? string.Empty;
-
-            AppCenterSecretText.Text = appCenterSecret;
-            AppCenterSecretTextBox.Text = appCenterSecret;
-
-            UserIdText.Text = userId;
-            UserIdTextBox.Text = userId;
-            
-            AppCenterStartButton.IsEnabled = !string.IsNullOrWhiteSpace(appCenterSecret);
-        }
-
-        async void AppCenterStartButton_Click(object sender, RoutedEventArgs e)
-        {
-            var appCenterSecret = AppCenterSecret;
-            var userId = UserId;
-
-            ShowConfigurationFlyoutButton.IsEnabled = false;
-
-            AppCenterStartButton.IsEnabled = false;
-
-            AppCenter.Start(appCenterSecret, typeof(Analytics), typeof(Crashes));
-
-            if (!string.IsNullOrWhiteSpace(userId))
-            {
-                AppCenter.SetUserId(UserId);
-            }
-
             if (await Crashes.HasCrashedInLastSessionAsync())
             {
                 HasCrashedInLastSessionIndicator.Visibility = Visibility.Visible;
             }
         }
 
-        void GanerateTestCrushButton_Click(object sender, RoutedEventArgs e)
+        async void CrashesSwitch_Toggled(object _, RoutedEventArgs __)
+        {
+            await Crashes.SetEnabledAsync(CrashesSwitch.IsOn);
+        }
+
+        async void AnalyticsSwitch_Toggled(object _, RoutedEventArgs __)
+        {
+            await Analytics.SetEnabledAsync(AnalyticsSwitch.IsOn);
+        }
+
+        void GanerateTestCrush()
         {
             Crashes.GenerateTestCrash();
         }
 
-        void ThrowNewTestCrashExceptionButton_Click(object sender, RoutedEventArgs e)
+        void ThrowNewTestCrashException()
         {
             throw new TestCrashException();
         }
 
-        void TrackErrorButton_Click(object sender, RoutedEventArgs e)
+        void TrackError()
         {
-            var errorPropertyValue = ErrorPropertyValue;
-
-            if (string.IsNullOrWhiteSpace(errorPropertyValue))
-            {
-                Crashes.TrackError(new TestCrashException());
-            }
-            else
+            if (UseErrorProperty)
             {
                 var props = new Dictionary<string, string>
                 {
-                    { "Prop1", ErrorPropertyValue }
+                    { ErrorPropertyName, ErrorPropertyValue }
                 };
 
                 Crashes.TrackError(new TestCrashException(), props);
+            }
+            else
+            {
+                Crashes.TrackError(new TestCrashException());
+            }
+        }
+
+        void TrackEvent()
+        {
+            if (UseEventProperty)
+            {
+                var props = new Dictionary<string, string>
+                {
+                    { EventPropertyName, EventPropertyValue }
+                };
+
+                Analytics.TrackEvent(EventName, props);
+            }
+            else
+            {
+                Analytics.TrackEvent(EventName);
             }
         }
     }

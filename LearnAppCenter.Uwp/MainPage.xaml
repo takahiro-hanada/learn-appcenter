@@ -3,78 +3,112 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:LearnAppCenter.Uwp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
     <StackPanel>
-        <TextBlock FontSize="{ThemeResource TextStyleExtraLargeFontSize}">
-            <Run Text="App Center Secret:" />
-            <Run x:Name="AppCenterSecretText" />
-        </TextBlock>
-        <TextBlock FontSize="{ThemeResource TextStyleExtraLargeFontSize}">
-            <Run Text="User Id:" />
-            <Run x:Name="UserIdText" />
-        </TextBlock>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Margin="12" Orientation="Horizontal">
+            <TextBox
+                Name="AppCenterSecretTextBox"
+                MinWidth="200"
+                Header="Secret"
+                Text="{x:Bind AppCenterSecret, Mode=TwoWay}" />
             <Button
-                Name="ShowConfigurationFlyoutButton"
-                Content="Configure"
-                Style="{ThemeResource TextBlockButtonStyle}">
-                <Button.Flyout>
-                    <Flyout x:Name="ConfigurationFlyout">
-                        <StackPanel>
-                            <TextBox Name="AppCenterSecretTextBox" Header="Secret" />
-                            <TextBox Name="UserIdTextBox" Header="User Id" />
-                            <Button
-                                Name="UpdateConfigurationButton"
-                                Click="UpdateConfigurationButton_Click"
-                                Content="Update" />
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-            <Button
-                Name="AppCenterStartButton"
-                Click="AppCenterStartButton_Click"
-                Content="Start AppCenter"
-                IsEnabled="False"
-                Style="{ThemeResource TextBlockButtonStyle}" />
+                Name="StartButton"
+                Margin="12,0"
+                VerticalAlignment="Bottom"
+                Click="StartButton_Click"
+                Content="Start" />
         </StackPanel>
+        <TextBox
+            MinWidth="200"
+            Margin="12"
+            HorizontalAlignment="Left"
+            Header="User Id"
+            Text="{x:Bind UserId, Mode=TwoWay}" />
+        <ToggleSwitch
+            Name="AnalyticsSwitch"
+            Margin="12"
+            Header="Analytics"
+            Toggled="AnalyticsSwitch_Toggled" />
+        <Button
+            Margin="32,4"
+            VerticalAlignment="Bottom"
+            Click="{x:Bind TrackEvent}"
+            Content="Analytics.TrackEvent(..." />
+        <TextBox
+            MinWidth="200"
+            Margin="64,4"
+            HorizontalAlignment="Left"
+            Header="Event Name"
+            Text="{x:Bind EventName, Mode=TwoWay}" />
+        <StackPanel Margin="64,4" Orientation="Horizontal">
+            <TextBox
+                MinWidth="120"
+                Margin="4,0"
+                Header="Property Name"
+                IsEnabled="{x:Bind UseEventPropertySwitch.IsOn, Mode=OneWay}"
+                Text="{x:Bind EventPropertyName, Mode=TwoWay}" />
+            <TextBox
+                MinWidth="120"
+                Margin="4,0"
+                Header="Property Value"
+                IsEnabled="{x:Bind UseEventPropertySwitch.IsOn, Mode=OneWay}"
+                Text="{x:Bind EventPropertyValue, Mode=TwoWay}" />
+            <ToggleSwitch
+                Name="UseEventPropertySwitch"
+                Margin="4,0"
+                VerticalAlignment="Bottom"
+                IsOn="{x:Bind UseEventProperty, Mode=TwoWay}"
+                OffContent=""
+                OnContent="" />
+        </StackPanel>
+        <ToggleSwitch
+            Name="CrashesSwitch"
+            Margin="12"
+            Header="Crashes"
+            Toggled="CrashesSwitch_Toggled" />
         <TextBlock
             Name="HasCrashedInLastSessionIndicator"
-            Margin="12"
+            Margin="32,4"
             Foreground="Red"
             Text="Has crashed in last session."
             Visibility="Collapsed" />
         <Button
-            Name="ThrowNewTestCrashExceptionButton"
-            Margin="12"
-            Click="ThrowNewTestCrashExceptionButton_Click"
-            Content="Throw new TestCrashException" />
+            Margin="32,4"
+            Click="{x:Bind ThrowNewTestCrashException}"
+            Content="throw new TestCrashException();" />
         <Button
-            Name="GanerateTestCrushButton"
-            Margin="12"
-            Click="GanerateTestCrushButton_Click"
-            Content="Call Crushes.GanerateTestCrush method. (debug build only)" />
-        <TextBlock
-            Margin="12,8"
-            FontSize="{ThemeResource TextStyleLargeFontSize}"
-            Text="Track Error" />
-        <StackPanel Margin="12">
+            Margin="32,4"
+            Click="{x:Bind GanerateTestCrush}"
+            Content="Crushes.GanerateTestCrush(); ... Debug build only" />
+        <Button
+            Margin="32,4"
+            VerticalAlignment="Bottom"
+            Click="{x:Bind TrackError}"
+            Content="Crushes.TrackError(new TestCrashException(), ..." />
+        <StackPanel Margin="64,4" Orientation="Horizontal">
             <TextBox
-                Name="ErrorPropertyValueTextBox"
-                MinWidth="200"
-                Margin="12,8"
-                HorizontalAlignment="Left"
-                Header="Error Property 'Prop1' Value"
+                MinWidth="120"
+                Margin="4,0"
+                VerticalAlignment="Bottom"
+                Header="Property Name"
+                IsEnabled="{x:Bind UseErrorPropertySwitch.IsOn, Mode=OneWay}"
+                Text="{x:Bind ErrorPropertyName, Mode=TwoWay}" />
+            <TextBox
+                MinWidth="120"
+                Margin="4,0"
+                VerticalAlignment="Bottom"
+                Header="Property Value"
+                IsEnabled="{x:Bind UseErrorPropertySwitch.IsOn, Mode=OneWay}"
                 Text="{x:Bind ErrorPropertyValue, Mode=TwoWay}" />
-            <Button
-                Name="TrackErrorButton"
-                Margin="12"
-                Click="TrackErrorButton_Click"
-                Content="Track Error (with new TestCrashException())" />
+            <ToggleSwitch
+                Name="UseErrorPropertySwitch"
+                Margin="4,0"
+                VerticalAlignment="Bottom"
+                IsOn="{x:Bind UseErrorProperty, Mode=TwoWay}"
+                OffContent=""
+                OnContent="" />
         </StackPanel>
     </StackPanel>
 </Page>
