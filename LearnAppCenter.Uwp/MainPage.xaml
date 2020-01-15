@@ -11,20 +11,25 @@
     <StackPanel>
         <TextBlock FontSize="{ThemeResource TextStyleExtraLargeFontSize}">
             <Run Text="App Center Secret:" />
-            <Run x:Name="AppSecretSecretText" />
+            <Run x:Name="AppCenterSecretText" />
+        </TextBlock>
+        <TextBlock FontSize="{ThemeResource TextStyleExtraLargeFontSize}">
+            <Run Text="User Id:" />
+            <Run x:Name="UserIdText" />
         </TextBlock>
         <StackPanel Orientation="Horizontal">
             <Button
-                Name="ShowAppCenterSecretFlyoutButton"
-                Content="Update secret"
+                Name="ShowConfigurationFlyoutButton"
+                Content="Configure"
                 Style="{ThemeResource TextBlockButtonStyle}">
                 <Button.Flyout>
-                    <Flyout x:Name="UpdateAppCenterSecretFlyout">
+                    <Flyout x:Name="ConfigurationFlyout">
                         <StackPanel>
                             <TextBox Name="AppCenterSecretTextBox" Header="Secret" />
+                            <TextBox Name="UserIdTextBox" Header="User Id" />
                             <Button
-                                Name="UpdateAppCenterSecretButton"
-                                Click="UpdateAppCenterSecretButton_Click"
+                                Name="UpdateConfigurationButton"
+                                Click="UpdateConfigurationButton_Click"
                                 Content="Update" />
                         </StackPanel>
                     </Flyout>
@@ -53,5 +58,23 @@
             Margin="12"
             Click="GanerateTestCrushButton_Click"
             Content="Call Crushes.GanerateTestCrush method. (debug build only)" />
+        <TextBlock
+            Margin="12,8"
+            FontSize="{ThemeResource TextStyleLargeFontSize}"
+            Text="Track Error" />
+        <StackPanel Margin="12">
+            <TextBox
+                Name="ErrorPropertyValueTextBox"
+                MinWidth="200"
+                Margin="12,8"
+                HorizontalAlignment="Left"
+                Header="Error Property 'Prop1' Value"
+                Text="{x:Bind ErrorPropertyValue, Mode=TwoWay}" />
+            <Button
+                Name="TrackErrorButton"
+                Margin="12"
+                Click="TrackErrorButton_Click"
+                Content="Track Error (with new TestCrashException())" />
+        </StackPanel>
     </StackPanel>
 </Page>

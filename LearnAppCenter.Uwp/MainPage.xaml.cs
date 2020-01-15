@@ -27,6 +27,18 @@ namespace LearnAppCenter.Uwp
             set => ApplicationData.Current.LocalSettings.Values["AppCenterSecret"] = value;
         }
 
+        static string UserId
+        {
+            get => ApplicationData.Current.LocalSettings.Values["UserId"] as string;
+            set => ApplicationData.Current.LocalSettings.Values["UserId"] = value;
+        }
+
+        string ErrorPropertyValue
+        {
+            get => ApplicationData.Current.LocalSettings.Values["ErrorPropertyValue"] as string;
+            set => ApplicationData.Current.LocalSettings.Values["ErrorPropertyValue"] = value;
+        }
+
         public MainPage()
         {
             InitializeComponent();
@@ -37,11 +49,13 @@ namespace LearnAppCenter.Uwp
             RefleshControls();
         }
 
-        void UpdateAppCenterSecretButton_Click(object sender, RoutedEventArgs e)
+        void UpdateConfigurationButton_Click(object sender, RoutedEventArgs e)
         {
             AppCenterSecret = AppCenterSecretTextBox.Text;
+            
+            UserId = UserIdTextBox.Text;
 
-            UpdateAppCenterSecretFlyout.Hide();
+            ConfigurationFlyout.Hide();
 
             RefleshControls();
         }
@@ -49,21 +63,32 @@ namespace LearnAppCenter.Uwp
         void RefleshControls()
         {
             var appCenterSecret = AppCenterSecret ?? string.Empty;
+            var userId = UserId ?? string.Empty;
 
-            AppSecretSecretText.Text = appCenterSecret;
-
+            AppCenterSecretText.Text = appCenterSecret;
             AppCenterSecretTextBox.Text = appCenterSecret;
 
+            UserIdText.Text = userId;
+            UserIdTextBox.Text = userId;
+            
             AppCenterStartButton.IsEnabled = !string.IsNullOrWhiteSpace(appCenterSecret);
         }
 
         async void AppCenterStartButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowAppCenterSecretFlyoutButton.IsEnabled = false;
+            var appCenterSecret = AppCenterSecret;
+            var userId = UserId;
+
+            ShowConfigurationFlyoutButton.IsEnabled = false;
 
             AppCenterStartButton.IsEnabled = false;
 
-            AppCenter.Start(AppCenterSecret, typeof(Analytics), typeof(Crashes));
+            AppCenter.Start(appCenterSecret, typeof(Analytics), typeof(Crashes));
+
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                AppCenter.SetUserId(UserId);
+            }
 
             if (await Crashes.HasCrashedInLastSessionAsync())
             {
@@ -79,6 +104,25 @@ namespace LearnAppCenter.Uwp
         void ThrowNewTestCrashExceptionButton_Click(object sender, RoutedEventArgs e)
         {
             throw new TestCrashException();
+        }
+
+        void TrackErrorButton_Click(object sender, RoutedEventArgs e)
+        {
+            var errorPropertyValue = ErrorPropertyValue;
+
+            if (string.IsNullOrWhiteSpace(errorPropertyValue))
+            {
+                Crashes.TrackError(new TestCrashException());
+            }
+            else
+            {
+                var props = new Dictionary<string, string>
+                {
+                    { "Prop1", ErrorPropertyValue }
+                };
+
+                Crashes.TrackError(new TestCrashException(), props);
+            }
         }
     }
 }
