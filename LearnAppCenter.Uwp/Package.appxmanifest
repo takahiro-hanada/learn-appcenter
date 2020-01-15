@@ -3,7 +3,7 @@
   <Identity Name="0f267941-5bce-478d-866c-ded7b0aea53c" Publisher="CN=user" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="0f267941-5bce-478d-866c-ded7b0aea53c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>LearnAppCenter.Uwp</DisplayName>
+    <DisplayName>App Center Test</DisplayName>
     <PublisherDisplayName>user</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="LearnAppCenter.Uwp.App">
-      <uap:VisualElements DisplayName="(sample) Learn AppCenter" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Learn AppCenter" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="(sample) App Center Test" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Learn AppCenter" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
